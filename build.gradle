@@ -86,7 +86,7 @@ tasks.register('xjcCalculator', JavaExec) {
         '-wsdl',
         '-extension',
         '-d', file('src/main/java').absolutePath,
-        '-p', 'com.rous.soap.proxy.calculator.client',
+        '-p', 'com.rous.integration.susalud.calculator.client',
         'src/main/resources/wsdl/calculator.wsdl'
         // o directamente: 'https://www.dneonline.com/calculator.asmx?WSDL'
     ]
