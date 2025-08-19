@@ -1,12 +1,5 @@
 server:
   port: 8080
-logging:
-  level:
-    org.springframework.ws: DEBUG
-    org.springframework.ws.server.MessageTracing: TRACE
-    org.springframework.ws.server.MessageTracing.sent: TRACE
-    org.springframework.ws.server.MessageTracing.received: TRACE
-
 soap:
   external:
     calculator:

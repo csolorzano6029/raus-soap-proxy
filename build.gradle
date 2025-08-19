@@ -1,7 +1,7 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.8'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.8'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.rous.soap.proxy'
@@ -9,40 +9,57 @@ version = '0.0.1-SNAPSHOT'
 description = 'RAUS SOAP migration on Spring Boot'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
+/**
+ * Evita que se cuele HttpClient 4.x (causa del NoClassDefFoundError)
+ */
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    all {
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'   // 4.x
+        exclude group: 'org.apache.httpcomponents', module: 'httpcore'     // 4.x
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-web-services'
-	implementation 'wsdl4j:wsdl4j:1.6.3'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-	// JAXB (necesario en Java 21)
-    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
-    implementation("org.glassfish.jaxb:jaxb-runtime:4.0.5")
+    // Starter oficial de Spring-WS (no fijamos spring-ws-core manualmente)
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
 
-    // Apache HttpClient 4 (paquete org.apache.hc.*)
-	//implementation("org.apache.httpcomponents:httpclient:4.5.14")
+    // WSDL4J para publicar/leer WSDL 1.1
+    implementation 'wsdl4j:wsdl4j:1.6.3'
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // SAAJ (Jakarta) para SOAP en Java 21+
+    implementation 'com.sun.xml.messaging.saaj:saaj-impl:3.0.4'
+
+    // HttpComponents 5 (deja que Boot gestione la versión)
+    implementation 'org.apache.httpcomponents.client5:httpclient5'
+
+    // JAXB (Java 21)
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-// --- JAXB / XJC: configuración para generar clases desde XSD ---
+/* =========================
+   XJC: Generación desde WSDL
+   ========================= */
 configurations {
     jaxb
 }
@@ -51,7 +68,6 @@ dependencies {
     // Herramientas XJC para Jakarta JAXB 4.x
     jaxb 'org.glassfish.jaxb:jaxb-xjc:4.0.5'
     jaxb 'org.glassfish.jaxb:jaxb-core:4.0.5'
-    // runtime ya está en dependencies, pero agregamos por seguridad en el classpath de generación
     jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
 }
 
@@ -66,31 +82,20 @@ tasks.register('xjcCalculator', JavaExec) {
         generatedCalculatorDir.mkdirs()
     }
     args = [
-        '-wsdl',                // <-- IMPORTANTE
-        '-extension',           // permite extensiones (evita warnings molestos)
-       '-d', file('src/main/java').absolutePath,
+        '-wsdl',
+        '-extension',
+        '-d', file('src/main/java').absolutePath,
         '-p', 'com.rous.soap.proxy.calculator.client',
-        'src/main/resources/wsdl/calculator.wsdl' // o la URL directa del WSDL
-        // 'http://www.dneonline.com/calculator.asmx?WSDL'
+        'src/main/resources/wsdl/calculator.wsdl'
+        // o directamente: 'https://www.dneonline.com/calculator.asmx?WSDL'
     ]
 }
 
-// Incluir las clases generadas en el sourceSet principal
-/* sourceSets {
-    main {
-        java {
-            srcDir generatedCalculatorDir
-        }
-    }
-} */
-
-// Asegurar que compileJava ejecute XJC primero
-/* compileJava.dependsOn(tasks.named('xjcCalculator'))
- */
- tasks.named('compileJava') {
+// Compilar después de generar
+tasks.named('compileJava') {
     dependsOn('xjcCalculator')
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

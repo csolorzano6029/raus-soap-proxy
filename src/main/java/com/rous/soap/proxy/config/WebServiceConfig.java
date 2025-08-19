@@ -1,36 +1,25 @@
 package com.rous.soap.proxy.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
+import org.springframework.ws.transport.http.HttpComponents5MessageSender;
 
 @Configuration
 public class WebServiceConfig {
 
-  // Paquete donde están las clases JAXB generadas para el calculator
-  private static final String CALCULATOR_CONTEXT_PATH =
+  private static final String CALC_CLIENT_PKG =
     "com.rous.soap.proxy.calculator.client";
 
   /**
-   * Marshaller para el servicio Calculator.
-   * Escanea las clases JAXB generadas (Add, AddResponse, etc).
+   * SOAP 1.1 con SAAJ
    */
   @Bean
-  public Jaxb2Marshaller calculatorMarshaller() {
-    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-    marshaller.setPackagesToScan(CALCULATOR_CONTEXT_PATH);
-    return marshaller;
-  }
-
-  /**
-   * MessageFactory SAAJ con SOAP 1.1 (el servicio público de tempuri usa SOAP 1.1).
-   */
-  @Bean
-  public SaajSoapMessageFactory soapMessageFactory() {
+  public SaajSoapMessageFactory messageFactory() {
     SaajSoapMessageFactory mf = new SaajSoapMessageFactory();
     mf.setSoapVersion(SoapVersion.SOAP_11);
     mf.afterPropertiesSet();
@@ -38,30 +27,47 @@ public class WebServiceConfig {
   }
 
   /**
-   * WebServiceTemplate específico para Calculator, usando JDK HttpUrlConnection
-   * (evita el problema de Content-Length duplicado).
+   * Marshaller/Unmarshaller para las clases generadas por XJC
    */
-  @Bean(name = "calculatorWsTemplate")
-  public WebServiceTemplate calculatorWsTemplate(
+  @Bean
+  public Jaxb2Marshaller calculatorMarshaller() {
+    Jaxb2Marshaller m = new Jaxb2Marshaller();
+    m.setPackagesToScan(CALC_CLIENT_PKG);
+    return m;
+  }
+
+  /**
+   * Sender HTTP basado en Apache HttpClient 5 con timeouts.
+   * (Timeouts configurados en HttpClient; no usar setters del sender para evitAR IllegalStateException)
+   */
+  @Bean
+  public HttpComponents5MessageSender messageSender() {
+    HttpComponents5MessageSender sender = new HttpComponents5MessageSender();
+    sender.setConnectionTimeout(java.time.Duration.ofSeconds(15));
+    sender.setReadTimeout(java.time.Duration.ofSeconds(15));
+    return sender;
+  }
+
+  /**
+   * WebServiceTemplate con defaultUri (puedes seguir pasando el endpoint en tu service si prefieres).
+   * Se puede sobreescribir con application.yml:
+   * soap.external.calculator.endpoint: https://www.dneonline.com/calculator.asmx
+   */
+  @Bean
+  public WebServiceTemplate webServiceTemplate(
+    SaajSoapMessageFactory messageFactory,
     Jaxb2Marshaller calculatorMarshaller,
-    SaajSoapMessageFactory soapMessageFactory
+    HttpComponents5MessageSender messageSender,
+    @Value(
+      "${soap.external.calculator.endpoint:https://www.dneonline.com/calculator.asmx}"
+    ) String defaultUri
   ) {
-    WebServiceTemplate template = new WebServiceTemplate(soapMessageFactory);
-    template.setMarshaller(calculatorMarshaller);
-    template.setUnmarshaller(calculatorMarshaller);
-
-    // Sender SIN Apache HttpClient
-    HttpUrlConnectionMessageSender sender =
-      new HttpUrlConnectionMessageSender();
-    // timeouts opcionales (ms)
-    //sender.setConnectionTimeout(10_000);
-    //sender.setReadTimeout(10_000);
-
-    template.setMessageSender(sender);
-
-    // Si quieres, puedes dejar configurado un defaultUri; igual puedes pasar el endpoint por código
-    // template.setDefaultUri("http://www.dneonline.com/calculator.asmx");
-
-    return template;
+    WebServiceTemplate tpl = new WebServiceTemplate();
+    tpl.setMessageFactory(messageFactory);
+    tpl.setMarshaller(calculatorMarshaller);
+    tpl.setUnmarshaller(calculatorMarshaller);
+    tpl.setMessageSender(messageSender);
+    tpl.setDefaultUri(defaultUri); // opcional; tu código puede seguir pasando 'endpoint' explícito
+    return tpl;
   }
 }
