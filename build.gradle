@@ -72,16 +72,11 @@ dependencies {
     jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
 }
 
-def generatedCalculatorDir = file("$buildDir/generated-sources/jaxb-calculator")
-
 tasks.register('xjcCalculator', JavaExec) {
     group = 'build'
     description = 'Generate JAXB classes from Calculator WSDL'
     classpath = configurations.jaxb
     mainClass = 'com.sun.tools.xjc.Driver'
-    doFirst {
-        generatedCalculatorDir.mkdirs()
-    }
     args = [
         '-wsdl',
         '-extension',
@@ -92,9 +87,25 @@ tasks.register('xjcCalculator', JavaExec) {
     ]
 }
 
+tasks.register('xjcQueryAffiliates', JavaExec) {
+    group = 'build'
+    description = 'Generate JAXB classes from QueryAffiliates WSDL'
+    classpath = configurations.jaxb
+    mainClass = 'com.sun.tools.xjc.Driver'
+    args = [
+        '-wsdl',
+        '-extension',
+        '-d', file('src/main/java').absolutePath,
+        '-p', 'com.rous.integration.susalud.query.affiliates',
+        'src/main/resources/wsdl/QueryAffiliatesPortService.wsdl'
+        // o directamente: 'https://www.dneonline.com/calculator.asmx?WSDL'
+    ]
+}
+
 // Compilar después de generar
 tasks.named('compileJava') {
     dependsOn('xjcCalculator')
+    dependsOn('xjcQueryAffiliates')
 }
 
 tasks.named('test') {

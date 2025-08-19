@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.susalud.gob.pe/ws/consulta/afiliados/schemas" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.susalud.gob.pe/ws/consulta/afiliados/schemas" targetNamespace="http://www.susalud.gob.pe/ws/consulta/afiliados/schemas">
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.susalud.gob.pe/ws/consulta/afiliados/schemas">
+      <!--Primer metodo-->
+      <xsd:element name="ConsultaRequest" tns:maxOccurs="1" tns:minOccurs="1">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="idInstitucion" type="xsd:string"/>
+            <xsd:element name="tiDocumento" type="xsd:string"/>
+            <xsd:element name="nuDocumento" type="xsd:string"/>
+            <xsd:element name="doConsultante" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConsultaResponse" tns:maxOccurs="1" tns:minOccurs="1">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="coError" type="xsd:string"/>
+            <xsd:element name="tiDocumento" type="xsd:string"/>
+            <xsd:element name="nuDocumento" type="xsd:string"/>
+            <xsd:element name="apPaterno" type="xsd:string"/>
+            <xsd:element name="apMaterno" type="xsd:string"/>
+            <xsd:element name="apCasada" type="xsd:string"/>
+            <xsd:element name="noPersona" type="xsd:string"/>
+            <xsd:element name="deSexo" type="xsd:string"/>
+            <xsd:element name="feNacimiento" type="xsd:string"/>
+            <xsd:element name="deUbigeo" type="xsd:string"/>
+            <xsd:element name="coContinente" type="xsd:string"/>
+            <xsd:element name="deContinente" type="xsd:string"/>
+            <xsd:element name="coPais" type="xsd:string"/>
+            <xsd:element name="dePais" type="xsd:string"/>
+            <xsd:element name="coDepartamento" type="xsd:string"/>
+            <xsd:element name="deDepartamento" type="xsd:string"/>
+            <xsd:element name="coProvincia" type="xsd:string"/>
+            <xsd:element name="deProvincia" type="xsd:string"/>
+            <xsd:element name="coDistrito" type="xsd:string"/>
+            <xsd:element name="deDistrito" type="xsd:string"/>
+            <xsd:element name="inFallecimiento" type="xsd:string"/>
+            <xsd:element name="feFallecimiento" type="xsd:string"/>
+            <xsd:element name="coPaisEmisor" type="xsd:string"/>
+            <xsd:element ref="tns:Afiliaciones"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Afiliaciones">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="afiliacion">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="coAfiliacion" type="xsd:string"/>
+                  <xsd:element name="tiPlanSalud" type="xsd:string"/>
+                  <xsd:element name="dePlanSalud" type="xsd:string"/>
+                  <xsd:element name="coIafas" type="xsd:string"/>
+                  <xsd:element name="tiIafas" type="xsd:string"/>
+                  <xsd:element name="deIafas" type="xsd:string"/>
+                  <xsd:element name="coParentesco" type="xsd:string"/>
+                  <xsd:element name="coPaisTitular" type="xsd:string"/>
+                  <xsd:element name="tiDocTitular" type="xsd:string"/>
+                  <xsd:element name="nuDocTitular" type="xsd:string"/>
+                  <xsd:element name="feIniAfiliacion" type="xsd:string"/>
+                  <xsd:element name="feFinAfiliacion" type="xsd:string"/>
+                  <xsd:element name="feFinCobertura" type="xsd:string"/>
+                  <xsd:element name="feActIafas" type="xsd:string"/>
+                  <xsd:element name="feActSunasa" type="xsd:string"/>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ConsultaRequest">
+    <wsdl:part element="tns:ConsultaRequest" name="ConsultaRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ConsultaResponse">
+    <wsdl:part element="tns:ConsultaResponse" name="ConsultaResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="consulta-afiliadosPort">
+    <wsdl:operation name="Consulta">
+      <wsdl:input message="tns:ConsultaRequest" name="ConsultaRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ConsultaResponse" name="ConsultaResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="consulta-afiliadosPortSoap11" type="tns:consulta-afiliadosPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Consulta">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ConsultaRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ConsultaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="consulta-afiliadosPortService">
+    <wsdl:port binding="tns:consulta-afiliadosPortSoap11" name="consulta-afiliadosPortSoap11">
+      <soap:address location="http://app9.susalud.gob.pe:8080/ws-consulta-afiliados/services/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
