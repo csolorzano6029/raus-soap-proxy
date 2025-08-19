@@ -9,7 +9,6 @@ package com.rous.soap.proxy.calculator.client;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
@@ -24,7 +23,8 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element name="AddResult" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         <element name="intA" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         <element name="intB" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       </sequence>
  *     </restriction>
  *   </complexContent>
@@ -35,28 +35,45 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "addResult"
+    "intA",
+    "intB"
 })
-@XmlRootElement(name = "AddResponse")
-public class AddResponse {
+@XmlRootElement(name = "Multiply")
+public class Multiply {
 
-    @XmlElement(name = "AddResult")
-    protected int addResult;
+    protected int intA;
+    protected int intB;
 
     /**
-     * Obtiene el valor de la propiedad addResult.
+     * Obtiene el valor de la propiedad intA.
      * 
      */
-    public int getAddResult() {
-        return addResult;
+    public int getIntA() {
+        return intA;
     }
 
     /**
-     * Define el valor de la propiedad addResult.
+     * Define el valor de la propiedad intA.
      * 
      */
-    public void setAddResult(int value) {
-        this.addResult = value;
+    public void setIntA(int value) {
+        this.intA = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad intB.
+     * 
+     */
+    public int getIntB() {
+        return intB;
+    }
+
+    /**
+     * Define el valor de la propiedad intB.
+     * 
+     */
+    public void setIntB(int value) {
+        this.intB = value;
     }
 
 }

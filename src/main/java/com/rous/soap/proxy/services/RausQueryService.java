@@ -5,7 +5,7 @@ import com.rous.soap.proxy.calculator.client.AddResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 @Service
 public class RausQueryService {
@@ -31,7 +31,7 @@ public class RausQueryService {
     AddResponse resp = (AddResponse) wsTemplate.marshalSendAndReceive(
       endpoint,
       req,
-      message -> ((SoapMessage) message).setSoapAction("http://tempuri.org/Add")
+      new SoapActionCallback("http://tempuri.org/Add")
     );
 
     // 3) Retornar valor tipado (sin parsear XML)

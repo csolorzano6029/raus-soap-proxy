@@ -24,7 +24,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element name="AddResult" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         <element name="MultiplyResult" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       </sequence>
  *     </restriction>
  *   </complexContent>
@@ -35,28 +35,28 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "addResult"
+    "multiplyResult"
 })
-@XmlRootElement(name = "AddResponse")
-public class AddResponse {
+@XmlRootElement(name = "MultiplyResponse")
+public class MultiplyResponse {
 
-    @XmlElement(name = "AddResult")
-    protected int addResult;
+    @XmlElement(name = "MultiplyResult")
+    protected int multiplyResult;
 
     /**
-     * Obtiene el valor de la propiedad addResult.
+     * Obtiene el valor de la propiedad multiplyResult.
      * 
      */
-    public int getAddResult() {
-        return addResult;
+    public int getMultiplyResult() {
+        return multiplyResult;
     }
 
     /**
-     * Define el valor de la propiedad addResult.
+     * Define el valor de la propiedad multiplyResult.
      * 
      */
-    public void setAddResult(int value) {
-        this.addResult = value;
+    public void setMultiplyResult(int value) {
+        this.multiplyResult = value;
     }
 
 }

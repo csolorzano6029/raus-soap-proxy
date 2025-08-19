@@ -42,6 +42,55 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// --- JAXB / XJC: configuración para generar clases desde XSD ---
+configurations {
+    jaxb
+}
+
+dependencies {
+    // Herramientas XJC para Jakarta JAXB 4.x
+    jaxb 'org.glassfish.jaxb:jaxb-xjc:4.0.5'
+    jaxb 'org.glassfish.jaxb:jaxb-core:4.0.5'
+    // runtime ya está en dependencies, pero agregamos por seguridad en el classpath de generación
+    jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+}
+
+def generatedCalculatorDir = file("$buildDir/generated-sources/jaxb-calculator")
+
+tasks.register('xjcCalculator', JavaExec) {
+    group = 'build'
+    description = 'Generate JAXB classes from Calculator WSDL'
+    classpath = configurations.jaxb
+    mainClass = 'com.sun.tools.xjc.Driver'
+    doFirst {
+        generatedCalculatorDir.mkdirs()
+    }
+    args = [
+        '-wsdl',                // <-- IMPORTANTE
+        '-extension',           // permite extensiones (evita warnings molestos)
+       '-d', file('src/main/java').absolutePath,
+        '-p', 'com.rous.soap.proxy.calculator.client',
+        'src/main/resources/wsdl/calculator.wsdl' // o la URL directa del WSDL
+        // 'http://www.dneonline.com/calculator.asmx?WSDL'
+    ]
+}
+
+// Incluir las clases generadas en el sourceSet principal
+/* sourceSets {
+    main {
+        java {
+            srcDir generatedCalculatorDir
+        }
+    }
+} */
+
+// Asegurar que compileJava ejecute XJC primero
+/* compileJava.dependsOn(tasks.named('xjcCalculator'))
+ */
+ tasks.named('compileJava') {
+    dependsOn('xjcCalculator')
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

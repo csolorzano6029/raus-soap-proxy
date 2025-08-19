@@ -24,7 +24,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element name="AddResult" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         <element name="SubtractResult" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       </sequence>
  *     </restriction>
  *   </complexContent>
@@ -35,28 +35,28 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "addResult"
+    "subtractResult"
 })
-@XmlRootElement(name = "AddResponse")
-public class AddResponse {
+@XmlRootElement(name = "SubtractResponse")
+public class SubtractResponse {
 
-    @XmlElement(name = "AddResult")
-    protected int addResult;
+    @XmlElement(name = "SubtractResult")
+    protected int subtractResult;
 
     /**
-     * Obtiene el valor de la propiedad addResult.
+     * Obtiene el valor de la propiedad subtractResult.
      * 
      */
-    public int getAddResult() {
-        return addResult;
+    public int getSubtractResult() {
+        return subtractResult;
     }
 
     /**
-     * Define el valor de la propiedad addResult.
+     * Define el valor de la propiedad subtractResult.
      * 
      */
-    public void setAddResult(int value) {
-        this.addResult = value;
+    public void setSubtractResult(int value) {
+        this.subtractResult = value;
     }
 
 }
