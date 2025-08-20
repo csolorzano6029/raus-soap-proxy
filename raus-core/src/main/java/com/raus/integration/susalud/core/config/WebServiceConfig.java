@@ -20,7 +20,7 @@ public class WebServiceConfig {
   public SaajSoapMessageFactory messageFactory() {
     SaajSoapMessageFactory mf = new SaajSoapMessageFactory();
     mf.setSoapVersion(SoapVersion.SOAP_11);
-    mf.afterPropertiesSet();
+    //mf.afterPropertiesSet();
     return mf;
   }
 
@@ -41,7 +41,7 @@ public class WebServiceConfig {
   public Jaxb2Marshaller susaludMarshaller() {
     Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
     marshaller.setPackagesToScan(
-      "com.rous.integration.susalud.query.affiliates"
+      "com.raus.integration.susalud.wsdl.affiliates"
     );
     return marshaller;
   }

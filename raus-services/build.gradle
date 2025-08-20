@@ -4,11 +4,14 @@ apply plugin: 'io.spring.dependency-management'
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+   
     implementation project(':raus-vo')
     implementation project(':raus-core')
     implementation project(':raus-client')
     // Si usas clases generadas por XJC:
     implementation project(':raus-wsdl')
+    
     // Si usas validaciones:
     implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
     // Lombok (opcional, si usas anotaciones Lombok)
