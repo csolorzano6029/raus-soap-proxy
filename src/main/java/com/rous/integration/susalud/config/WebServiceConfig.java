@@ -75,9 +75,11 @@ public class WebServiceConfig {
   @Bean(name = "susaludMarshaller")
   @Primary
   public Jaxb2Marshaller susaludMarshaller() {
-    Jaxb2Marshaller m = new Jaxb2Marshaller();
-    m.setPackagesToScan("com.rous.integration.susalud.query.affiliates");
-    return m;
+    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+    marshaller.setPackagesToScan(
+      "com.rous.integration.susalud.query.affiliates"
+    );
+    return marshaller;
   }
 
   @Bean(name = "susaludWebServiceTemplate")
@@ -88,12 +90,12 @@ public class WebServiceConfig {
     HttpComponents5MessageSender messageSender,
     @Value("${soap.external.susalud.endpoint}") String endpoint
   ) {
-    WebServiceTemplate tpl = new WebServiceTemplate();
-    tpl.setMessageFactory(messageFactory);
-    tpl.setMarshaller(susaludMarshaller);
-    tpl.setUnmarshaller(susaludMarshaller);
-    tpl.setMessageSender(messageSender);
-    tpl.setDefaultUri(endpoint);
-    return tpl;
+    WebServiceTemplate serviceTemplate = new WebServiceTemplate();
+    serviceTemplate.setMessageFactory(messageFactory);
+    serviceTemplate.setMarshaller(susaludMarshaller);
+    serviceTemplate.setUnmarshaller(susaludMarshaller);
+    serviceTemplate.setMessageSender(messageSender);
+    serviceTemplate.setDefaultUri(endpoint);
+    return serviceTemplate;
   }
 }
