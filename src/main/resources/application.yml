@@ -1,8 +1,0 @@
-server:
-  port: 8080
-soap:
-  external:
-    calculator:
-      endpoint: "http://www.dneonline.com/calculator.asmx" # SOAP externo
-    susalud:
-      endpoint: "http://app9.susalud.gob.pe:8080/ws-consulta-afiliados/services"

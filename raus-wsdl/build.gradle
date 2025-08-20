@@ -1,0 +1,28 @@
+configurations { jaxb }
+
+dependencies {
+  // API & runtime JAXB
+  implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+  implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+  // Herramientas XJC
+  jaxb 'org.glassfish.jaxb:jaxb-xjc:4.0.5'
+  jaxb 'org.glassfish.jaxb:jaxb-core:4.0.5'
+}
+
+def srcDir = "$projectDir/src/main/java"
+
+tasks.register('xjcQueryAffiliates', JavaExec) {
+  group = 'build'
+  description = 'Generate JAXB from SUSALUD WSDL'
+  classpath = configurations.jaxb
+  mainClass = 'com.sun.tools.xjc.Driver'
+  args = ['-wsdl','-extension',
+          '-d', srcDir,
+          '-p','com.raus.integration.susalud.wsdl.affiliates',
+          'src/main/resources/wsdl/QueryAffiliatesPortService.wsdl']
+}
+
+sourceSets {
+  main.java.srcDir("$buildDir/generated/sources/xjc/java")
+}
+compileJava.dependsOn 'xjcQueryAffiliates'

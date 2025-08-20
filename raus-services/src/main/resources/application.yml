@@ -1,0 +1,11 @@
+server:
+  port: 8081
+soap:
+  external:
+    susalud:
+      endpoint: "http://localhost:8088/ws-consulta-afiliados/services"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,mappings

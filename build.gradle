@@ -1,113 +1,34 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.4.8'
-    id 'io.spring.dependency-management' version '1.1.7'
+  id 'org.springframework.boot' version '3.4.8' 
+  id 'io.spring.dependency-management' version '1.1.7' 
+  id 'java'
 }
 
-group = 'com.rous.soap.proxy'
-version = '0.0.1-SNAPSHOT'
-description = 'RAUS SOAP migration on Spring Boot'
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-/**
- * Evita que se cuele HttpClient 4.x (causa del NoClassDefFoundError)
- */
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    all {
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'   // 4.x
-        exclude group: 'org.apache.httpcomponents', module: 'httpcore'     // 4.x
-    }
-}
-
+// Agrega este bloque:
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-web'        // Controllers REST + Jackson
-    implementation 'org.springframework.boot:spring-boot-starter-validation' // @Valid en los DTOs
-    // Starter oficial de Spring-WS (no fijamos spring-ws-core manualmente)
-    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+subprojects {
+  apply plugin: 'java'
+  group = 'com.raus.integration.susalud'
+  version = '0.1.0-SNAPSHOT'
 
-    // WSDL4J para publicar/leer WSDL 1.1
-    implementation 'wsdl4j:wsdl4j:1.6.3'
+  java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+  repositories { mavenCentral() }
 
-    // SAAJ (Jakarta) para SOAP en Java 21+
-    implementation 'com.sun.xml.messaging.saaj:saaj-impl:3.0.4'
+  // Evita conflictos con HttpClient 4.x
+  configurations.all {
+    exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    exclude group: 'org.apache.httpcomponents', module: 'httpcore'
+  }
 
-    // HttpComponents 5 (deja que Boot gestione la versión)
-    implementation 'org.apache.httpcomponents.client5:httpclient5'
-
-    // JAXB (Java 21)
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
-    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
+  dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+  }
 
-/* =========================
-   XJC: Generación desde WSDL
-   ========================= */
-configurations {
-    jaxb
-}
-
-dependencies {
-    // Herramientas XJC para Jakarta JAXB 4.x
-    jaxb 'org.glassfish.jaxb:jaxb-xjc:4.0.5'
-    jaxb 'org.glassfish.jaxb:jaxb-core:4.0.5'
-    jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
-}
-
-tasks.register('xjcCalculator', JavaExec) {
-    group = 'build'
-    description = 'Generate JAXB classes from Calculator WSDL'
-    classpath = configurations.jaxb
-    mainClass = 'com.sun.tools.xjc.Driver'
-    args = [
-        '-wsdl',
-        '-extension',
-        '-d', file('src/main/java').absolutePath,
-        '-p', 'com.rous.integration.susalud.calculator.client',
-        'src/main/resources/wsdl/calculator.wsdl'
-        // o directamente: 'https://www.dneonline.com/calculator.asmx?WSDL'
-    ]
-}
-
-tasks.register('xjcQueryAffiliates', JavaExec) {
-    group = 'build'
-    description = 'Generate JAXB classes from QueryAffiliates WSDL'
-    classpath = configurations.jaxb
-    mainClass = 'com.sun.tools.xjc.Driver'
-    args = [
-        '-wsdl',
-        '-extension',
-        '-d', file('src/main/java').absolutePath,
-        '-p', 'com.rous.integration.susalud.query.affiliates',
-        'src/main/resources/wsdl/QueryAffiliatesPortService.wsdl'
-        // o directamente: 'https://www.dneonline.com/calculator.asmx?WSDL'
-    ]
-}
-
-// Compilar después de generar
-tasks.named('compileJava') {
-    dependsOn('xjcCalculator')
-    dependsOn('xjcQueryAffiliates')
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
+  tasks.register('rausservices') {
+    dependsOn ':raus-services:bootRun'
+  }
 }

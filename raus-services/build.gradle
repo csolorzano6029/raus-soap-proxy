@@ -1,0 +1,25 @@
+plugins { id 'org.springframework.boot' }
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation project(':raus-vo')
+    implementation project(':raus-core')
+    implementation project(':raus-client')
+    // Si usas clases generadas por XJC:
+    implementation project(':raus-wsdl')
+    // Si usas validaciones:
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+    // Lombok (opcional, si usas anotaciones Lombok)
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+}
+
+springBoot {
+  // Usa el FQCN exacto de tu clase @SpringBootApplication
+  mainClass = 'com.raus.integration.susalud.services.RausIntegrationSusaludApplication'
+}
