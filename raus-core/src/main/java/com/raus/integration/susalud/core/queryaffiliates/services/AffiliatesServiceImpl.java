@@ -15,12 +15,12 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 @Service
 public class AffiliatesServiceImpl implements AffiliatesService {
 
-  private final WebServiceTemplate tpl;
+  private final WebServiceTemplate serviceTemplate;
 
   public AffiliatesServiceImpl(
-    @Qualifier("susaludWebServiceTemplate") WebServiceTemplate tpl
+    @Qualifier("susaludWebServiceTemplate") WebServiceTemplate serviceTemplate
   ) {
-    this.tpl = tpl;
+    this.serviceTemplate = serviceTemplate;
   }
 
   @Override
@@ -31,7 +31,7 @@ public class AffiliatesServiceImpl implements AffiliatesService {
     ConsultaRequest soapReq = QueryAffiliatesMapper.toSoapRequest(dto);
 
     // 2) Llamada SOAP: muchas implementaciones no requieren SOAPAction
-    Object raw = tpl.marshalSendAndReceive(soapReq);
+    Object raw = serviceTemplate.marshalSendAndReceive(soapReq);
 
     // Si tu operación requiere SOAPAction explícita, usa esto:
     // Object raw = tpl.marshalSendAndReceive(soapReq, new SoapActionCallback("<<SOAP_ACTION_REAL>>"));
