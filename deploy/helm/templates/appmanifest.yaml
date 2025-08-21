@@ -1,0 +1,5 @@
+{{- include "kc-backend.deployment" . }}
+---
+{{- include "kc-backend.service" . }}
+---
+{{- include "kc-backend.ingress" . }}

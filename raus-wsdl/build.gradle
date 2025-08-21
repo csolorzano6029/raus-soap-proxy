@@ -26,3 +26,11 @@ sourceSets {
   main.java.srcDir("$buildDir/generated/sources/xjc/java")
 }
 compileJava.dependsOn 'xjcQueryAffiliates'
+
+jar {
+    enabled = true
+}
+
+bootJar {
+    enabled = false
+}

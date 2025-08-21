@@ -1,0 +1,6 @@
+dependencies:
+- name: kc-backend
+  repository: https://nexusdev.krugercorp.com/repository/kruger-seed-helm/
+  version: 1.0.0
+digest: sha256:02bb69856f8398303e7c518d142d2befb9926bebba5f72cd3e50564ffe86ecbb
+generated: "2023-04-17T12:01:16.308005928-05:00"

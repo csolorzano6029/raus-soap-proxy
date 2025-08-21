@@ -8,3 +8,11 @@ dependencies {
   implementation project(':raus-vo')
   implementation project(':raus-wsdl')
 }
+
+jar {
+    enabled = true
+}
+
+bootJar {
+    enabled = false
+}

@@ -1,0 +1,6 @@
+server:
+  port: 8080
+soap:
+  external:
+    susalud:
+      endpoint: ${SUSALUD_ENDPOINT}
