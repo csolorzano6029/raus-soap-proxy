@@ -1,15 +1,27 @@
-FROM gcr.io/distroless/java21-debian12:nonroot
+# Stage 1: Build
+FROM eclipse-temurin:21-jdk-alpine AS builder
+WORKDIR /app
 
-# MAINTAINER Carlos Solorzano "csolorzano@ec.krugercorp.com"
+# Copy all project files
+COPY . .
 
-ENV SPRING_PROFILES_ACTIVE=prod
-ENV TZ=${TZ}
-ENV LANG=C.UTF-8
+# Grant permissions and build the project
+RUN chmod +x gradlew
+RUN ./gradlew clean build -x test
 
-EXPOSE 8080
-
+# Stage 2: Final runtime image
+FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /api
 
-COPY raus-services/build/libs/*.jar /api/app.jar
+# Environment variables
+ENV SPRING_PROFILES_ACTIVE=prod
+ENV LANG=C.UTF-8
 
-CMD ["app.jar"]
+# Copy the JAR generated in the builder stage
+COPY --from=builder /app/raus-services/build/libs/*.jar /api/app.jar
+
+# Expose application port
+EXPOSE 8080
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
