@@ -1,5 +1,6 @@
 package com.raus.integration.susalud.vo.queryaffiliates;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class QueryAffiliatesResponseVO {
 
   private String coError;
+  private String deError;
   private String tiDocumento;
   private String nuDocumento;
   private String apPaterno;
@@ -35,5 +37,8 @@ public class QueryAffiliatesResponseVO {
   private String inFallecimiento;
   private String feFallecimiento;
   private String coPaisEmisor;
+  private String edadActual;
+
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private List<AfiliacionVO> afiliaciones;
 }

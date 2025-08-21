@@ -1,6 +1,6 @@
 package com.raus.integration.susalud.core.queryaffiliates.services;
 
-import com.raus.integration.susalud.client.queryaffiliates.AffiliatesService;
+import com.raus.integration.susalud.client.services.queryaffiliates.AffiliatesService;
 import com.raus.integration.susalud.core.queryaffiliates.mappers.QueryAffiliatesMapper;
 import com.raus.integration.susalud.vo.queryaffiliates.QueryAffiliatesRequestVO;
 import com.raus.integration.susalud.vo.queryaffiliates.QueryAffiliatesResponseVO;

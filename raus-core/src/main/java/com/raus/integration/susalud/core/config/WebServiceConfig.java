@@ -18,10 +18,9 @@ public class WebServiceConfig {
    */
   @Bean(name = "messageFactory")
   public SaajSoapMessageFactory messageFactory() {
-    SaajSoapMessageFactory mf = new SaajSoapMessageFactory();
-    mf.setSoapVersion(SoapVersion.SOAP_11);
-    //mf.afterPropertiesSet();
-    return mf;
+    SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
+    messageFactory.setSoapVersion(SoapVersion.SOAP_11);
+    return messageFactory;
   }
 
   /**
