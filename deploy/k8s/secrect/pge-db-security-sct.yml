@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: pge-db-security-sct
-type: Opaque
-data:
-  db_url: amRiYzpvcmFjbGU6dGhpbjpAMTkyLjE2OC41LjIyODoxNTIxL3hl
-  db_username: cGdlYXNjb3Jwb3JhdGU=
-  db_password: YWRtaW4=
