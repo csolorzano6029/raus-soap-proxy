@@ -7,6 +7,11 @@ dependencies {
   implementation project(':raus-client')
   implementation project(':raus-vo')
   implementation project(':raus-wsdl')
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jar {

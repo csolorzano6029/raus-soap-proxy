@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-// import org.springframework.ws.soap.client.core.SoapActionCallback; // si tu WSDL exige SOAPAction
+// Si el WSDL exige SOAPAction
+// import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 @Service
 public class AffiliatesServiceImpl implements AffiliatesService {
@@ -33,7 +34,7 @@ public class AffiliatesServiceImpl implements AffiliatesService {
     // 2) Llamada SOAP: muchas implementaciones no requieren SOAPAction
     Object raw = serviceTemplate.marshalSendAndReceive(soapReq);
 
-    // Si tu operación requiere SOAPAction explícita, usa esto:
+    // Si la operación requiere SOAPAction explícita, usar esto:
     // Object raw = tpl.marshalSendAndReceive(soapReq, new SoapActionCallback("<<SOAP_ACTION_REAL>>"));
 
     // 3) SOAP -> DTO

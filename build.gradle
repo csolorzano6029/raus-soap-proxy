@@ -27,6 +27,8 @@ subprojects {
 
   dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
   }
 
@@ -34,3 +36,15 @@ subprojects {
     dependsOn ':raus-services:bootRun'
   }
 }
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED", "STANDARD_OUT", "STANDARD_ERROR"
+        exceptionFormat "full"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+    }
+}
+

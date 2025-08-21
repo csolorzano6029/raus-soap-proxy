@@ -21,6 +21,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
+test {
+    useJUnitPlatform()
+}
+
 springBoot {
   // Usa el FQCN exacto de tu clase @SpringBootApplication
   mainClass = 'com.raus.integration.susalud.services.RausIntegrationSusaludApplication'
