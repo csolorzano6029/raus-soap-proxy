@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-// Si el WSDL exige SOAPAction
+// If the WSDL requires SOAPAction, use this
 // import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 @Service
@@ -28,21 +28,18 @@ public class AffiliatesServiceImpl implements AffiliatesService {
   public QueryAffiliatesResponseVO queryAffiliates(
     QueryAffiliatesRequestVO dto
   ) {
-    // 1) DTO -> SOAP
     ConsultaRequest soapReq = QueryAffiliatesMapper.toSoapRequest(dto);
-
-    // 2) Llamada SOAP: muchas implementaciones no requieren SOAPAction
     Object raw = serviceTemplate.marshalSendAndReceive(soapReq);
 
-    // Si la operación requiere SOAPAction explícita, usar esto:
+    // If the operation requires an explicit SOAPAction, use this:
     // Object raw = tpl.marshalSendAndReceive(soapReq, new SoapActionCallback("<<SOAP_ACTION_REAL>>"));
 
-    // 3) SOAP -> DTO
     if (!(raw instanceof ConsultaResponse resp)) {
       throw new IllegalStateException(
         "Respuesta inesperada del servicio SUSALUD"
       );
     }
+
     return QueryAffiliatesMapper.fromSoapResponse(resp);
   }
 }

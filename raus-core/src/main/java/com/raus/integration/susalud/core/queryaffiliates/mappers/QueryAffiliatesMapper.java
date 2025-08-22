@@ -93,12 +93,12 @@ public final class QueryAffiliatesMapper {
     if (date == null || date.isEmpty()) return "";
     if (date.contains("/")) return date; // ya en formato dd/MM/yyyy
     if (date.contains("-")) {
-      // viene como yyyy-MM-dd
+      // It comes as yyyy-MM-dd
       String[] parts = date.split("-");
       return parts[2] + "/" + parts[1] + "/" + parts[0];
     }
     if (date.length() == 8) {
-      // viene como yyyymmdd
+      // It comes as yyyymmdd
       return (
         date.substring(6, 8) +
         "/" +

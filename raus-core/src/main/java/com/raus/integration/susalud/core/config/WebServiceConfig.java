@@ -14,30 +14,39 @@ import org.springframework.ws.transport.http.HttpComponents5MessageSender;
 public class WebServiceConfig {
 
   /**
-   * SOAP 1.1 con SAAJ
+   * Defines a SOAP message factory using SAAJ with SOAP 1.1 protocol.
+   * This bean is responsible for creating SOAP messages
+   * that will be sent and received by the WebServiceTemplate.
    */
   @Bean(name = "messageFactory")
-  public SaajSoapMessageFactory messageFactory() {
+  SaajSoapMessageFactory messageFactory() {
     SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
     messageFactory.setSoapVersion(SoapVersion.SOAP_11);
     return messageFactory;
   }
 
   /**
-   * Sender HTTP basado en Apache HttpClient 5 con timeouts.
-   * (Timeouts configurados en HttpClient; no usar setters del sender para evitAR IllegalStateException)
+   * Defines an HTTP sender based on Apache HttpClient 5.
+   * Configures connection and read timeouts at 15 seconds.
+   * Note: Timeouts are configured directly in HttpClient;
+   * avoid using sender setters to prevent IllegalStateException.
    */
   @Bean(name = "messageSender")
-  public HttpComponents5MessageSender messageSender() {
+  HttpComponents5MessageSender messageSender() {
     HttpComponents5MessageSender sender = new HttpComponents5MessageSender();
     sender.setConnectionTimeout(java.time.Duration.ofSeconds(15));
     sender.setReadTimeout(java.time.Duration.ofSeconds(15));
     return sender;
   }
 
+  /**
+   * Configures the JAXB marshaller/unmarshaller for Susalud.
+   * Scans the package containing the generated WSDL classes
+   * to convert between Java objects and XML payloads.
+   */
   @Bean(name = "susaludMarshaller")
   @Primary
-  public Jaxb2Marshaller susaludMarshaller() {
+  Jaxb2Marshaller susaludMarshaller() {
     Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
     marshaller.setPackagesToScan(
       "com.raus.integration.susalud.wsdl.affiliates"
@@ -45,9 +54,19 @@ public class WebServiceConfig {
     return marshaller;
   }
 
+  /**
+   * Defines the WebServiceTemplate for Susalud integration.
+   * - Uses the configured message factory (SOAP 1.1 + SAAJ).
+   * - Uses the JAXB marshaller/unmarshaller for XML mapping.
+   * - Uses the Apache HttpClient 5 message sender with timeouts.
+   * - Sets the default endpoint URI from application properties.
+   *
+   * This is the main entry point for sending SOAP requests
+   * and receiving SOAP responses from Susalud.
+   */
   @Bean(name = "susaludWebServiceTemplate")
   @Primary
-  public WebServiceTemplate susaludWebServiceTemplate(
+  WebServiceTemplate susaludWebServiceTemplate(
     SaajSoapMessageFactory messageFactory,
     Jaxb2Marshaller susaludMarshaller,
     HttpComponents5MessageSender messageSender,
