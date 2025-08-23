@@ -18,7 +18,7 @@ tasks.register('xjcQueryAffiliates', JavaExec) {
   mainClass = 'com.sun.tools.xjc.Driver'
   args = ['-wsdl','-extension',
           '-d', srcDir,
-          '-p','com.raus.integration.susalud.wsdl.affiliates',
+          '-p','pe.ser.susalud.raus.wsdl.affiliates',
           'src/main/resources/wsdl/QueryAffiliatesPortService.wsdl']
 }
 

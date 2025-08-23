@@ -1,4 +1,4 @@
-rootProject.name = 'raus-integration-susalud'
+rootProject.name = 'pe-ser-susalud-raus-consulta'
 include 'raus-services'
 include 'raus-vo'
 include 'raus-core'

@@ -27,7 +27,7 @@ El flujo general es:
 #### 1. Clonar y compilar
 ```bash
 git clone <repo-url>
-cd raus-integration-susalud-ms
+cd pe-ser-susalud-raus-consulta-ms
 ./gradlew clean build -x test
 ```
 
@@ -39,10 +39,10 @@ cd raus-services
 
 #### 3. Ejecutar con Docker
 ```bash
-docker build -t raus-integration-susalud-ms -f deploy/docker/Dockerfile .
+docker build -t pe-ser-susalud-raus-consulta-ms -f deploy/docker/Dockerfile .
 docker run -d -p 8080:8080 \
   -e SPRING_PROFILES_ACTIVE=dev \
-  --name raus-integration-susalud raus-integration-susalud-ms
+  --name pe-ser-susalud-raus-consulta pe-ser-susalud-raus-consulta-ms
 ```
 
 ### 🧪 Ejecutar Tests
@@ -83,7 +83,7 @@ General workflow:
 #### 1. Clone and build
 ```bash
 git clone <repo-url>
-cd raus-integration-susalud-ms
+cd pe-ser-susalud-raus-consulta-ms
 ./gradlew clean build -x test
 ```
 
@@ -95,10 +95,10 @@ cd raus-services
 
 #### 3. Run with Docker
 ```bash
-docker build -t raus-integration-susalud-ms -f deploy/docker/Dockerfile .
+docker build -t pe-ser-susalud-raus-consulta-ms -f deploy/docker/Dockerfile .
 docker run -d -p 8080:8080 \
   -e SPRING_PROFILES_ACTIVE=dev \
-  --name raus-integration-susalud raus-integration-susalud-ms
+  --name pe-ser-susalud-raus-consulta pe-ser-susalud-raus-consulta-ms
 ```
 
 ### 🧪 Run Tests

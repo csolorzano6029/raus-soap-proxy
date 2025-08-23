@@ -2,18 +2,20 @@ plugins {
   id 'org.springframework.boot' version '3.4.8' apply false
   id 'io.spring.dependency-management' version '1.1.7' apply false
   id 'java'
+  id "org.sonarqube" version "4.4.1.3373"
+  id "jacoco"
 }
 
 allprojects {
   repositories { mavenCentral() }
 }
 
-
 subprojects {
   apply plugin: 'java'
   apply plugin: 'org.springframework.boot'
   apply plugin: 'io.spring.dependency-management'
-  group = 'com.raus.integration.susalud'
+  apply plugin: 'jacoco'
+  group = 'pe.ser.susalud.raus'
   version = '0.1.0-SNAPSHOT'
 
   java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
@@ -32,19 +34,47 @@ subprojects {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
   }
 
+  test {
+      useJUnitPlatform()
+      testLogging {
+          events "PASSED", "FAILED", "SKIPPED", "STANDARD_OUT", "STANDARD_ERROR"
+          exceptionFormat "full"
+          showExceptions true
+          showCauses true
+          showStackTraces true
+      }
+      finalizedBy jacocoTestReport
+  }
+
+  jacocoTestReport {
+      reports {
+          xml.required = true   
+          html.required = true  
+      }
+  }
+
   tasks.register('rausservices') {
     dependsOn ':raus-services:bootRun'
   }
 }
 
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "PASSED", "FAILED", "SKIPPED", "STANDARD_OUT", "STANDARD_ERROR"
-        exceptionFormat "full"
-        showExceptions true
-        showCauses true
-        showStackTraces true
+sonarqube {
+    properties {
+        property "sonar.coverage.jacoco.xmlReportPaths", [
+            "raus-core/build/reports/jacoco/test/jacocoTestReport.xml",
+            "raus-services/build/reports/jacoco/test/jacocoTestReport.xml",
+            "raus-client/build/reports/jacoco/test/jacocoTestReport.xml",
+            "raus-vo/build/reports/jacoco/test/jacocoTestReport.xml"
+        ]
+        property "sonar.coverage.exclusions", [
+            "**/config/**",           // Configuración Spring
+            "**/dto/**",              // DTOs
+            "**/vo/**",               // Value Objects (si solo son POJOs)
+            "**/wsdl/**",             // Clases generadas por WSDL
+            "**/exceptions/**",       // Excepciones custom
+            "**/*Application.java"    // Clase main de Spring Boot
+        ]
     }
 }
+
 
